@@ -1,0 +1,38 @@
+Steps to be performed:
+Data transaction:
+start-all.sh
+jps
+Hadoop fs -mkdir /hive_data
+Hadoop fs -copyFromLocal diabetes.csv /hive_data
+hadoop fs -ls /hive_data
+
+
+hive
+show tables;
+create table diabetes (Pregnancies int,Glucose int,BloodPressure int,SkinThickness int,Insulin int,BMI double,Diabetes double,Age int,Outcome int)row format delimited fields terminated by ',';
+load data inpath '/testing/diabetes.csv' into table diabetes;
+
+select count(*) from diabetes where Pregnancies=7;
+select count(*) from diabetes;
+select count(*) from diabetes where Glucose=180;
+
+Map reduce Jobs:
+Hadoop fs -mkdir /map_reduce
+sudo vi Unimaster.txt
+Hadoop fs -copyFromLocal Unimaster.txt /mapreduce
+
+sudo vi Unislave1.txt
+hadoop fs -appendToFile Unislave1.txt /mapreduce/Unimaster.txt
+
+sudo vi Unislave2.txt
+hadoop fs -appendToFile Unislave2.txt /mapreduce/Unimaster.txt
+
+hadoop fs -cat /mapreduce/Unimaster.txt
+hadoop fs -ls /mapreduce
+
+Command to execute mapreduce:
+cd /usr/local/hadoop/share/hadoop/mapreduce
+hadoop jar hadoop-mapreduce-examples-3.3.1.jar wordcount /mapreduce/Unimaster.txt /mapreduce/Unimaster_output
+
+To delete directory in HDFS
+hdfs dfs -rm -R /employee
